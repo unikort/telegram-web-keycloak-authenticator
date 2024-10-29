@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+}
+
+group = "telegram.web.keycloak.authenticator"
+version = "0.1.0"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.keycloak:keycloak-services:26.0.0"
+    implementation 'commons-codec:commons-codec:1.17.1'
+
+    compileOnly "org.projectlombok:lombok:1.18.34"
+    annotationProcessor "org.projectlombok:lombok:1.18.34"
+
+    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+
+    testImplementation platform("org.junit:junit-bom:5.10.0")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

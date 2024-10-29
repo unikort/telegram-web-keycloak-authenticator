@@ -1,0 +1,10 @@
+{
+  "themes": [
+    {
+      "name": "keycloak.v2-telegram-web-login",
+      "types": [
+        "login"
+      ]
+    }
+  ]
+}
