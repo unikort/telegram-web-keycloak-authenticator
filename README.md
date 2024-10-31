@@ -1,6 +1,6 @@
 # Telegram Web Keycloak Authenticator
 
-![Keycloak-with-telegram-logo.png](docs/Keycloak-with-telegram-logo.png)
+![Keycloak-with-telegram-logo.png](docs/keycloak-with-telegram-logo.png)
 
 ## Contents
 
@@ -29,7 +29,7 @@ For a quick introduction to the features, you can deploy a demo project from thi
 
 * Java 17 or higher installed
 * Docker and docker-compose
-* You have a Telegram bot and you know its username and token
+* You have a Telegram bot, and you know its username and token
 
 ### Install
 
@@ -83,6 +83,48 @@ Then configure authenticator in Keycloak
 * Finally, by entering an email, you will be redirected to a page with user data. The authorization process has been completed, and a new user has been created in keycloak based on the data received from Telegram.
 
 ![authorized-user.png](docs/authorized-user.png)
+
+## How to deploy this on my own Keycloak instance?
+
+### Install
+
+* Download `telegram-web-keycloak-authenticator-x.x.x.jar` from this page https://github.com/rickispp/telegram-web-keycloak-authenticator/releases
+* Put the downloaded file in a folder `<YOUR_KEYCLOAK_HOME>/providers/`
+* Run or restart your Keycloak instance
+
+### Configure
+
+* Set Bot Domain
+  * Send to [@BotFather](https://t.me/BotFather) command
+  ```shell
+  /setdomain https://<your_keycloak_host>
+  ```
+
+* Add authenticator to your flows
+  * Go to `Authentication -> Flows -> Browser flow` (Direct grant flow also available).
+  * Click on `Add step`, find `Telegram Web Login Widget` and add step.
+  * Place `Telegram Web Login Widget` after `Cookie` step and change `Requirement` to `Alternative`.
+  * Configure `Telegram Web Login Widget` step by filling `Bot username` and `Bot Token` fields.
+
+* Add Telegram Login Widget to the login page
+  * If you are using a standard theme, you can simply change it to `keycloak.v2-telegram-web-login` on the page `Realm settings -> Themes -> Login theme`.
+  * If you are using a non-standard theme, then you need to add the Telegram Login Widget script to the login page of your theme
+    ```html
+    <#if telegram_bot_username?? && telegram_redirect_uri??>
+      <div class="telegram-web-login-widget-container">
+        <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="${telegram_bot_username}" data-size="large" data-auth-url="${telegram_redirect_uri}" data-request-access="write"></script>
+      </div>
+    </#if>
+    ```
+
+* Add `Content-Security-Policy`
+   * Open your `Realm settings` and go to `Security defenses` tab
+   * Edit `Content-Security-Policy` field by adding `https://oauth.telegram.org/` to `frame-src` and `frame-ancestors`. For example `frame-src 'self' https://oauth.telegram.org/; frame-ancestors 'self' https://oauth.telegram.org/; object-src 'none';`
+
+* Check that the configuration is correct
+  * Go to your login page. For example, `https://<your_keycloak_host>/realms/<your_realm>/account/`
+  * You should see login page with a Telegram authorization button.
+
 
 ## Contribute
 

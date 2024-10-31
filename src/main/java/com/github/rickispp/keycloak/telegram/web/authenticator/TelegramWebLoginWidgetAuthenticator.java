@@ -51,14 +51,15 @@ public class TelegramWebLoginWidgetAuthenticator implements Authenticator {
             return;
         }
 
+        UserModel user;
         TelegramAuthDataValidator telegramAuthDataValidator = new TelegramAuthDataValidator(authenticatorConfig, telegramAuthData);
-        if (telegramAuthDataValidator.isValid()) {
-            UserModel user = getOrCreateUser(context, telegramAuthData);
-            context.setUser(user);
-            context.success();
-        } else {
+        if (!telegramAuthDataValidator.isValid() || (user = getOrCreateUser(context, telegramAuthData)) == null) {
             context.failure(AuthenticationFlowError.INVALID_CREDENTIALS);
+            return;
         }
+
+        context.setUser(user);
+        context.success();
     }
 
     private TelegramWebAuthenticatorConfig getAuthenticatorConfig(AuthenticationFlowContext context) {
@@ -129,6 +130,11 @@ public class TelegramWebLoginWidgetAuthenticator implements Authenticator {
     }
 
     private UserModel createNewUser(RealmModel realm, UserProvider userProvider, TelegramAuthData telegramAuthData) {
+        if (!realm.isRegistrationAllowed()) {
+            LOGGER.info("Can't create new telegram authenticated user! User registration is not allowed.");
+            return null;
+        }
+
         String username = StringUtil.isNotBlank(telegramAuthData.getUsername()) ? telegramAuthData.getUsername() : UUID.randomUUID().toString();
         UserModel user = userProvider.addUser(realm, username);
         user.setEnabled(true);
