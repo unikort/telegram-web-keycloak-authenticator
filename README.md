@@ -9,11 +9,12 @@
     *   [Requirements](#requirements)
     *   [Install](#install)
     *   [Usage](#usage)
+*   [How to deploy this on my own Keycloak instance?](#How-to-deploy-this-on-my-own-Keycloak-instance)
 *   [Contribute](#contribute)
 
 ## What is this?
 
-The goal of this project is to implement seamless Keycloak authorization via [Telegram Login Widget](https://core.telegram.org/widgets/login).
+The goal of this project is to implement seamless Keycloak login via [Telegram Login Widget](https://core.telegram.org/widgets/login).
 
 There are several projects that implement a similar feature but all of them require either user interaction with the bot in the Telegram interface (going to the Telegram application and entering code or generating a link to an external application). Such solutions are good, but a process is inconvenient in many cases and often requires the implementation of additional logic outside Keycloak.
 
@@ -68,7 +69,7 @@ Then configure authenticator in Keycloak
 
 * After deployment and configuration, you can go to the page http://keycloak.localhost/realms/demo/account/
 
-* You will see an authorization page that should have an authorization button via Telegram.
+* You will see login page that should have login button via Telegram.
 
 ![Login page](./docs/login-page.png)
 
@@ -86,13 +87,10 @@ Then configure authenticator in Keycloak
 
 ## How to deploy this on my own Keycloak instance?
 
-### Install
-
-* Download `telegram-web-keycloak-authenticator-x.x.x.jar` from this page https://github.com/rickispp/telegram-web-keycloak-authenticator/releases
-* Put the downloaded file in a folder `<YOUR_KEYCLOAK_HOME>/providers/`
-* Run or restart your Keycloak instance
-
-### Configure
+* Download and install plugin
+  * Download `telegram-web-keycloak-authenticator-x.x.x.jar` from this page https://github.com/rickispp/telegram-web-keycloak-authenticator/releases
+  * Put the downloaded file in a folder `<YOUR_KEYCLOAK_HOME>/providers/`
+  * Run or restart your Keycloak instance
 
 * Set Bot Domain
   * Send to [@BotFather](https://t.me/BotFather) command
@@ -123,7 +121,7 @@ Then configure authenticator in Keycloak
 
 * Check that the configuration is correct
   * Go to your login page. For example, `https://<your_keycloak_host>/realms/<your_realm>/account/`
-  * You should see login page with a Telegram authorization button.
+  * You should see login page with a Telegram login button.
 
 
 ## Contribute
