@@ -29,12 +29,6 @@
 
                     <input type="hidden" id="id-hidden-input" name="credentialId" <#if auth.selectedCredential?has_content>value="${auth.selectedCredential}"</#if>/>
                     <@buttons.loginButton />
-
-                    <#if telegram_bot_username?? && telegram_redirect_uri??>
-                        <div class="telegram-web-login-widget-container">
-                            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="${telegram_bot_username}" data-size="large" data-auth-url="${telegram_redirect_uri}" data-request-access="write"></script>
-                        </div>
-                    </#if>
                 </form>
             </#if>
             </div>
@@ -48,7 +42,7 @@
             </div>
         </#if>
     <#elseif section = "socialProviders" >
-        <#if realm.password && social.providers?? && social.providers?has_content>
+        <#if realm.password && ((social.providers?? && social.providers?has_content) || (telegram_bot_username?? && telegram_redirect_uri??))>
             <@identityProviders.show social=social/>
         </#if>
     </#if>

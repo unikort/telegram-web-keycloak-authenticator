@@ -5,6 +5,11 @@
       </p>
   </div>
   <div id="kc-social-providers" class="${properties.kcFormSocialAccountSectionClass!}">
+      <#if telegram_bot_username?? && telegram_redirect_uri??>
+          <div class="telegram-web-login-widget-container" style="display: grid; place-content: center; margin-bottom: 8px;">
+              <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="${telegram_bot_username}" data-size="large" data-auth-url="${telegram_redirect_uri}" data-request-access="write"></script>
+          </div>
+      </#if>
       <ul class="${properties.kcFormSocialAccountListClass!} <#if social.providers?size gt 3>${properties.kcFormSocialAccountListGridClass!}</#if>">
           <#list social.providers as p>
               <li class="${properties.kcFormSocialAccountListItemClass!}">
