@@ -1,6 +1,18 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "keycloak" ]
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   keycloak:
-    image: keycloak/keycloak:26.0
+    image: keycloak/keycloak:26.3.5
     volumes:
       - ./build/libs/:/opt/keycloak/providers/
       - ./demo/:/opt/keycloak/data/import/
@@ -9,4 +21,11 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
     command: start-dev --import-realm
+
+volumes:
+  pgdata:

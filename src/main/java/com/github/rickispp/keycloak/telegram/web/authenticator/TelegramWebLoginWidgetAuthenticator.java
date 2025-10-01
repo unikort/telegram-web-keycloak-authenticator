@@ -27,9 +27,9 @@ public class TelegramWebLoginWidgetAuthenticator implements Authenticator {
     public static final String TELEGRAM_BOT_USERNAME_FORM_ATTRIBUTE_NAME = "telegram_bot_username";
     public static final String TELEGRAM_REDIRECT_URI_FORM_ATTRIBUTE_NAME = "telegram_redirect_uri";
 
-    public static final String TG_USERNAME_ATTRIBUTE_NAME = "telegram_username";
-    public static final String TG_USER_ID_ATTRIBUTE_NAME = "telegram_user_id";
-    public static final String TG_USER_PHOTO_URL_ATTRIBUTE_NAME = "telegram_photo_url";
+    public static final String TG_USERNAME_ATTRIBUTE_NAME = "telegramUsername";
+    public static final String TG_USER_ID_ATTRIBUTE_NAME = "telegramUserId";
+    public static final String TG_USER_PHOTO_URL_ATTRIBUTE_NAME = "photo";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
@@ -125,16 +125,20 @@ public class TelegramWebLoginWidgetAuthenticator implements Authenticator {
         RealmModel realm = context.getRealm();
         return userProvider.searchForUserByUserAttributeStream(realm, TG_USER_ID_ATTRIBUTE_NAME, telegramAuthData.getId())
                 .findFirst()
+                .map(user -> updateExistingUser(user, telegramAuthData))
                 .orElseGet(() -> createNewUser(realm, userProvider, telegramAuthData));
 
     }
 
-    private UserModel createNewUser(RealmModel realm, UserProvider userProvider, TelegramAuthData telegramAuthData) {
-        if (!realm.isRegistrationAllowed()) {
-            LOGGER.info("Can't create new telegram authenticated user! User registration is not allowed.");
-            return null;
-        }
+    private UserModel updateExistingUser(UserModel user, TelegramAuthData telegramAuthData) {
+        user.setFirstName(telegramAuthData.getFirstName());
+        user.setLastName(telegramAuthData.getLastName());
+        user.setSingleAttribute(TG_USERNAME_ATTRIBUTE_NAME, telegramAuthData.getUsername());
+        user.setSingleAttribute(TG_USER_PHOTO_URL_ATTRIBUTE_NAME, telegramAuthData.getPhotoUrl());
+        return user;
+    }
 
+    private UserModel createNewUser(RealmModel realm, UserProvider userProvider, TelegramAuthData telegramAuthData) {
         String username = StringUtil.isNotBlank(telegramAuthData.getUsername()) ? telegramAuthData.getUsername() : UUID.randomUUID().toString();
         UserModel user = userProvider.addUser(realm, username);
         user.setEnabled(true);
