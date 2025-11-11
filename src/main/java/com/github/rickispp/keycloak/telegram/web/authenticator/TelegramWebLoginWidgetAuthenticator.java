@@ -27,8 +27,8 @@ public class TelegramWebLoginWidgetAuthenticator implements Authenticator {
     public static final String TELEGRAM_BOT_USERNAME_FORM_ATTRIBUTE_NAME = "telegram_bot_username";
     public static final String TELEGRAM_REDIRECT_URI_FORM_ATTRIBUTE_NAME = "telegram_redirect_uri";
 
-    public static final String TG_USERNAME_ATTRIBUTE_NAME = "tg_username";
-    public static final String TG_USER_ID_ATTRIBUTE_NAME = "tg_user_id";
+    public static final String TG_USERNAME_ATTRIBUTE_NAME = "tgUsername";
+    public static final String TG_USER_ID_ATTRIBUTE_NAME = "tgUserId";
     public static final String TG_USER_PHOTO_URL_ATTRIBUTE_NAME = "picture";
 
     @Override
